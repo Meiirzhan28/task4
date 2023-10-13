@@ -1,0 +1,81 @@
+{% extends "users/base.html" %}
+
+{% block title %}Users Table{% endblock title %}
+{% block content %}
+<head>
+  <style>
+    .button-container {
+        display: flex;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    button {
+        margin-right: 10px;
+    }
+</style>
+</head>
+<div class="button-container">
+    <form method="post" action="{% url 'block_user' user.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Block</button>
+    </form>
+    <form method="post" action="{% url 'unblock_user' user.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Unblock</button>
+    </form>
+    <form method="post" action="{% url 'delete_user' user.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Delete</button>
+    </form>
+</div>
+  <div class="table-container">
+    <table class="table table-bordered table-striped text-center">
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" id="select-all">
+          </th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Registration Date</th>
+          <th>Last Login Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td><input type="checkbox" class="user-checkbox" name="user_ids" value="{{ user.id }}"></td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.date_joined|date:"H:i, j F, Y" }}</td>
+            <td>{{ user.last_login|date:"H:i, j F, Y" }}</td>
+            <td>{{ user.is_active|yesno:"active,blocked" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectAll = document.getElementById('select-all');
+      const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+      const actionButtons = document.querySelectorAll('.button-container form button');
+
+      selectAll.addEventListener('change', function() {
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = selectAll.checked;
+        });
+      });
+    
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          const checkedCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+          actionButtons.forEach(button => {
+            button.disabled = checkedCheckboxes.length === 0;
+          });
+        });
+      });
+    });
+  </script>
+{% endblock %}
