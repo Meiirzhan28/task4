@@ -6,6 +6,6 @@
     }],
     "routes":[{
         "src":"/(.*)",
-        "desr":"user_management/wsgi.py"
+        "dest":"user_management/wsgi.py"
     }]
 }
