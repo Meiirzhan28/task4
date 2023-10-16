@@ -9,24 +9,45 @@ from django.contrib.auth.models import User
 
 
 @login_required
-def block_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    user.is_active = False
-    user.save()
-    return redirect(to='/user/')
+def block_user(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            selected_users_id = request.POST.getlist('boxes')
+            caller_id = request.user.id
+            selected_users_id.remove(str(caller_id))
+            for id in selected_users_id:
+                u = User.objects.get(id = id)
+                u.is_active = False
+                u.save()
+                messages.success(request, "The User is Blocked")
+            return redirect(to='/user/')
 
 @login_required
-def unblock_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    user.is_active = True
-    user.save()
-    return redirect(to='/user/')
+def unblock_user(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            selected_users_id = request.POST.getlist('boxes')
+            caller_id = request.user.id
+            selected_users_id.remove(str(caller_id))
+            for id in selected_users_id:
+                u = User.objects.get(id = id)
+                u.is_active = True
+                u.save()
+                messages.success(request, "The User is Unblocked")
+            return redirect(to='/user/') 
 
 @login_required
-def delete_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    user.delete()
-    return redirect(to='/user/')
+def delete_user(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            selected_users_id = request.POST.getlist('boxes')
+            caller_id = request.user.id
+            selected_users_id.remove(str(caller_id))
+            for id in selected_users_id:
+                u = User.objects.get(id = id)
+                u.delete()
+                messages.success(request, "The User is Deleted")
+            return redirect(to='/user/')
 
 @login_required
 def profile(request):

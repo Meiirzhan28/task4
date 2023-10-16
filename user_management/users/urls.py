@@ -6,7 +6,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='users-register'), 
     path('profile/', profile, name='users-profile'),
     path('user/', user_table, name='users-table'),
-    path('block_user/<int:user_id>/', block_user, name='block_user'),
-    path('unblock_user/<int:user_id>/', unblock_user, name='unblock_user'),
-    path('delete_user/<int:user_id>/', delete_user, name='delete_user'),
+    path('block_user/', block_user, name='block_user'),
+    path('unblock_user/', unblock_user, name='unblock_user'),
+    path('delete_user/', delete_user, name='delete_user'),
 ]

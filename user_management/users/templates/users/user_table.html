@@ -1,11 +1,9 @@
-{% extends "users/base.html" %}
+{% extends 'users/base.html' %}
 
-{% block title %}Users Table{% endblock title %}
 {% block content %}
 <head>
   <style>
-    .button-container {
-        display: flex;
+    .btn-secondary {
         margin-bottom: 20px;
         margin-top: 20px;
     }
@@ -14,68 +12,59 @@
     }
 </style>
 </head>
-<div class="button-container">
-    <form method="post" action="{% url 'block_user' user.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Block</button>
-    </form>
-    <form method="post" action="{% url 'unblock_user' user.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Unblock</button>
-    </form>
-    <form method="post" action="{% url 'delete_user' user.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Delete</button>
-    </form>
-</div>
-  <div class="table-container">
-    <table class="table table-bordered table-striped text-center">
-      <thead>
-        <tr>
-          <th>
-            <input type="checkbox" id="select-all">
-          </th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Registration Date</th>
-          <th>Last Login Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-          <tr>
-            <td><input type="checkbox" class="user-checkbox" name="user_ids" value="{{ user.id }}"></td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.date_joined|date:"H:i, j F, Y" }}</td>
-            <td>{{ user.last_login|date:"H:i, j F, Y" }}</td>
-            <td>{{ user.is_active|yesno:"active,blocked" }}</td>
+<form action="{% url 'block_user' %}"  method="POST">
+	{% csrf_token %}
+	{{form.as_p}}
+	<div>
+        <button class='btn-secondary' type="submit" value="{{user.id}}" formaction="{% url 'block_user' %}" name="boxes" style="width: 10%;">
+</svg>Block</button>
+        <button class='btn-secondary' type="submit" value="{{user.id}}" formaction="{% url 'unblock_user' %}" name="boxes" style="width: 10%;">
+</svg>Unblock</button>
+        <button class='btn-secondary' type="submit" value="{{user.id}}" formaction="{% url 'delete_user' %}" name="boxes" style="width: 10%;">
+</svg>Delete</button>
+	<br>
+	</div>
+	<table class="table table-striped table-hover table-bordered">
+  	  <thead class="table-dark">
+	    <tr>
+		    <th> <input scope="col" name="select all" type="checkbox" onClick="toggle(this, 'boxes')"></th>     
+	     	<script type="text/javascript">
+				function toggle(select_toggle,boxes) {
+					checkboxes = document.getElementsByName(boxes);
+					for (var i = 0, n = checkboxes.length; i < n; i++) {
+						checkboxes[i].checked = select_toggle.checked;
+					}
+				}
+            </script>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+      	    <th scope="col">Date joined</th>
+            <th scope="col">Last login</th>
+            <th scope="col">Status</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const selectAll = document.getElementById('select-all');
-      const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
-      const actionButtons = document.querySelectorAll('.button-container form button');
-
-      selectAll.addEventListener('change', function() {
-        checkboxes.forEach(checkbox => {
-          checkbox.checked = selectAll.checked;
-        });
-      });
+          </thead>
+          <tbody>
     
-      checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-          const checkedCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
-          actionButtons.forEach(button => {
-            button.disabled = checkedCheckboxes.length === 0;
-          });
-        });
-      });
-    });
-  </script>
+		{% if users %}
+		{% for user in users %}
+			<tr>
+				<td><input type="checkbox" name="boxes" value="{{ user.id }}" id="{{ user.id }}"></td>
+				<td>{{ user.username }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.date_joined }}</td>
+				<td>{{ user.last_login }}</td>
+				{% if user.is_active %}
+				<td>Active</td>
+				{% else %}
+				<td>Blocked</td>
+				{% endif %}
+			</tr>
+		{% endfor %}
+
+{% endif %}
+	  </tbody>
+	</table>
+	<br/>
+        </form>
+
 {% endblock %}
