@@ -69,7 +69,7 @@ class CustomLoginView(LoginView):
         return super(CustomLoginView, self).form_valid(form)
     
 def home(request):
-    return render(request, 'users\home.html')
+    return render(request, 'users/home.html')
 
 class RegisterView(View):
     form_class = RegisterForm
