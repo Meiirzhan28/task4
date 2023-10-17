@@ -1,0 +1,58 @@
+{% extends "users/base.html" %}
+{% block title %}Profile Page{% endblock title %}
+{% block content %}
+<h2></h2>
+    {% if user_form.errors %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <div id="form_errors">
+                {% for key, value in user_form.errors.items %}
+                    <strong>{{ value }}</strong>
+                {% endfor %}
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+    <div class="form-content text-center">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label class="small mb-1" style="font-size: 18px;">Username:</label>
+                        </td>
+                        <td>
+                            {{ user.username }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="small mb-1" style="font-size: 18px;">Email:</label>
+                        </td>
+                        <td>
+                            {{ user.email }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="small mb-1" style="font-size: 18px;">First Name:</label>
+                        </td>
+                        <td>
+                            {{ user.first_name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="small mb-1" style="font-size: 18px;">Last Name:</label>
+                        </td>
+                        <td>
+                            {{ user.last_name }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+{% endblock content %}
